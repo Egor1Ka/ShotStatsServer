@@ -1,4 +1,5 @@
 import * as sessionRepository from '../repository/session.js';
+import * as billingService from './billingService.js';
 import { toDTO } from '../dto/sessionDto.js';
 import { DomainError } from '../utils/http/httpError.js';
 import { httpStatus } from '../utils/http/httpStatus.js';
@@ -18,6 +19,7 @@ export async function createSession(userId, body) {
   if (typeof shots_made !== 'number' || typeof shots_total !== 'number' || typeof accuracy !== 'number') {
     throw new DomainError('shots_made, shots_total and accuracy are required numbers', httpStatus.BAD_REQUEST);
   }
+  await billingService.consumeSessionAccess(userId);
   const doc = await sessionRepository.create({
     userId,
     source,

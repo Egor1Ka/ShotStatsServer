@@ -40,5 +40,12 @@ export function created(res, data) {
 export function httpResponseError(res, error) {
   const status = error.status ?? 500;
   const message = error.message ?? 'Internal Server Error';
-  res.status(status).json({ error: message });
+  const body = { error: message };
+  if (error.code) {
+    body.code = error.code;
+  }
+  if (error.details !== undefined) {
+    body.details = error.details;
+  }
+  res.status(status).json(body);
 }
