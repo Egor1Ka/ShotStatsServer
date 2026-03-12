@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './db.js';
 import passport from './config/passport.js';
 import routes from './routes/routes.js';
+import * as creemWebhookController from './controllers/creemWebhookController.js';
 
 const app = express();
 
@@ -14,6 +15,11 @@ app.use(
     credentials: true,
   })
 );
+
+const apiPrefix = (process.env.API_PREFIX ?? '').replace(/\/$/, '');
+const webhookPath = apiPrefix ? `${apiPrefix}/webhooks/creem` : '/webhooks/creem';
+app.use(webhookPath, express.raw({ type: 'application/json' }), creemWebhookController.postCreemWebhook);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -29,7 +35,9 @@ async function start() {
   });
 }
 
-start().catch((err) => {
+const handleStartError = (err) => {
   console.error('Failed to start:', err);
   process.exit(1);
-});
+};
+
+start().catch(handleStartError);

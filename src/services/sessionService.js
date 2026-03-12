@@ -40,6 +40,23 @@ export async function listSessionsByUser(userId) {
   return docs.map((doc) => toDTO({ ...doc, _id: doc._id }));
 }
 
+const PAGE_SIZE = 6;
+
+/**
+ * @param {string} userId
+ * @param {number} offset  page index (0-based), each page = PAGE_SIZE items
+ * @returns {Promise<{ items: Array<object>, total: number, hasMore: boolean }>}
+ */
+export async function listSessionsByUserPaginated(userId, offset) {
+  const skip = offset * PAGE_SIZE;
+  const { items, total } = await sessionRepository.findByUserIdPaginated(userId, skip, PAGE_SIZE);
+  return {
+    items: items.map((doc) => toDTO({ ...doc, _id: doc._id })),
+    total,
+    hasMore: skip + PAGE_SIZE < total,
+  };
+}
+
 /**
  * @param {string} sessionId
  * @param {string} userId

@@ -45,3 +45,35 @@ npm run dev
 ## Переменные окружения
 
 См. `.env.example`. Обязательны: `DB_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `JWT_SECRET`.
+
+## Локальный webhook Creem (ngrok)
+
+Чтобы Creem мог слать события на твой локальный бэкенд:
+
+1. **Установи ngrok** (один раз):
+   ```bash
+   # macOS (Homebrew)
+   brew install ngrok
+   # или скачай с https://ngrok.com/download
+   ```
+
+2. **Запусти бэкенд** в одном терминале:
+   ```bash
+   npm run dev
+   ```
+   Должен слушать порт 9000.
+
+3. **Подними туннель** в другом терминале:
+   ```bash
+   ngrok http 9000
+   ```
+
+4. **Скопируй HTTPS-URL** из вывода ngrok (например `https://a1b2c3d4.ngrok-free.app`).
+
+5. **В Creem Dashboard** (Developers → Webhooks): создай webhook с URL:
+   ```
+   https://ТВОЙ_NGROK_URL/webhooks/creem
+   ```
+   Пример: `https://a1b2c3d4.ngrok-free.app/webhooks/creem`. Сохрани webhook и скопируй **Signing secret** в `.env` как `CREEM_WEBHOOK_SECRET`.
+
+6. Пока окно ngrok открыто, запросы Creem будут идти на твой localhost:9000. При перезапуске ngrok URL поменяется — обнови URL в Creem (бесплатный план даёт новый адрес каждый раз).

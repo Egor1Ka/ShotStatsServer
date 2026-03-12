@@ -14,6 +14,7 @@ const planSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     billing: { type: billingSchema, required: true },
     entitlements: { type: mongoose.Schema.Types.Mixed, default: {} },
+    creemProductId: { type: String, default: null },
     isActive: { type: Boolean, default: true },
     version: { type: Number, required: true, min: 1 },
   },

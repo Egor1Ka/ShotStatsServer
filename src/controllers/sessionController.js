@@ -22,6 +22,7 @@ export async function create(req, res) {
 
 /**
  * GET /sessions — list sessions for current user
+ * Supports ?offset=N for pagination (page index, 6 items per page)
  */
 export async function list(req, res) {
   try {
@@ -30,8 +31,15 @@ export async function list(req, res) {
       res.status(httpStatus.UNAUTHORIZED).json({ error: 'Unauthorized' });
       return;
     }
-    const sessions = await sessionService.listSessionsByUser(userId);
-    ok(res, sessions);
+    const rawOffset = req.query?.offset;
+    if (rawOffset === undefined) {
+      const sessions = await sessionService.listSessionsByUser(userId);
+      ok(res, sessions);
+      return;
+    }
+    const offset = Math.max(0, parseInt(rawOffset, 10) || 0);
+    const result = await sessionService.listSessionsByUserPaginated(userId, offset);
+    ok(res, result);
   } catch (error) {
     httpResponseError(res, error);
   }

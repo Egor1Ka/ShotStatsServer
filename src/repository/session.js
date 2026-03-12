@@ -17,6 +17,20 @@ export function findByUserId(userId) {
 }
 
 /**
+ * @param {import('mongoose').Types.ObjectId} userId
+ * @param {number} skip
+ * @param {number} limit
+ * @returns {Promise<{ items: import('mongoose').Document[], total: number }>}
+ */
+export async function findByUserIdPaginated(userId, skip, limit) {
+  const [items, total] = await Promise.all([
+    Session.find({ userId }).sort({ timestamp: -1 }).skip(skip).limit(limit).lean().exec(),
+    Session.countDocuments({ userId }).exec(),
+  ]);
+  return { items, total };
+}
+
+/**
  * @param {import('mongoose').Types.ObjectId} id
  * @returns {Promise<import('mongoose').Document | null>}
  */

@@ -11,7 +11,7 @@ const SUBSCRIPTION_STATUS_QUEUED = 'queued';
 const SUBSCRIPTION_STATUS_EXPIRED = 'expired';
 const SUBSCRIPTION_STATUS_EXHAUSTED = 'exhausted';
 const DEFAULT_PURCHASE_SOURCE = 'manual';
-const PURCHASE_SOURCES = ['manual', 'stripe', 'promo'];
+const PURCHASE_SOURCES = ['manual', 'stripe', 'promo', 'creem'];
 const DUPLICATE_KEY_ERROR = 11000;
 
 const addDays = (date, days) => {

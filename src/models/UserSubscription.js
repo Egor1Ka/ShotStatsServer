@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const STATUS = ['queued', 'active', 'exhausted', 'expired', 'canceled'];
-const SOURCE = ['manual', 'stripe', 'promo'];
+const SOURCE = ['manual', 'stripe', 'promo', 'creem'];
 
 const billingSnapshotSchema = new mongoose.Schema(
   {
