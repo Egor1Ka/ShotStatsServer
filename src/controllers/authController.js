@@ -113,9 +113,11 @@ export async function postRefresh(req, res) {
 }
 
 /**
- * GET /auth/logout — clear auth cookies and redirect to frontend.
+ * GET /auth/logout — invalidate refresh token in DB, clear auth cookies and redirect to frontend.
  */
-export function getLogout(req, res) {
+export async function getLogout(req, res) {
+  const refreshValue = req.cookies?.[REFRESH_COOKIE];
+  await authService.logout(refreshValue);
   clearAuthCookies(res);
   res.redirect(FRONTEND_URL);
 }

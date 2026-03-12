@@ -42,6 +42,7 @@ export function verifyAccessToken(token) {
  * @returns {{ token: string, expiresAt: Date }}
  */
 export async function createRefreshToken(userId, provider, providerUserId) {
+  await refreshTokenRepository.deleteByProviderUser(userId, provider, providerUserId);
   const token = generateRefreshTokenValue();
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + REFRESH_DAYS);
@@ -81,6 +82,16 @@ export async function refreshAccess(tokenValue) {
     name: user.name,
     avatar: user.avatar ?? null,
   };
+}
+
+/**
+ * Delete refresh token from DB on logout.
+ * @param {string | undefined} tokenValue
+ */
+export async function logout(tokenValue) {
+  if (tokenValue) {
+    await refreshTokenRepository.findByIdAndDelete(tokenValue);
+  }
 }
 
 /**

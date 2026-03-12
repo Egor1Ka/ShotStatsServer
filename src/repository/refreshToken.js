@@ -23,3 +23,11 @@ export function findByToken(token) {
 export function findByIdAndDelete(token) {
   return RefreshToken.findOneAndDelete({ token }).exec();
 }
+
+/**
+ * @param {import('mongoose').Types.ObjectId | string} userId
+ * @returns {Promise<import('mongoose').mongo.DeleteResult>}
+ */
+export function deleteByProviderUser(userId, provider, providerUserId) {
+  return RefreshToken.deleteMany({ userId, provider, providerUserId }).exec();
+}
